@@ -7,20 +7,25 @@ import json
 
 
 class ImageClassifier:
-    def __init__(self, base64String):
-        self.base64String = base64String
-        self.imgSize = 300
-        self.pokemonDict = None
-        self.pokemonName = None
 
-    def predict(self):
-        #Metodos para serem rodados apenas uma vez:
-        model = self.getModel()
-        self.loadDictFromJson()
-        
-        #Metodos que devem rodar para a classificação da imagem
+    def __init__(self):
+
+        self.base64String = None
+        self.imgSize = 300
+        self.pokemonName = None
+        self.dictJson = None
+        self.model = None
+
+    def predict(self, base64String):
+
+        if self.model is None and self.dictJson is None:
+            self.model = self.getModel()
+            self.dictJson = self.loadDictFromJson()
+
+        self.base64String = base64String
         image = self.base64ToImage()
-        self.predictImg(image, model)
+
+        self.predictImg(image, self.model)
 
     def base64ToImage(self):
         try:
@@ -35,31 +40,27 @@ class ImageClassifier:
 
     def getModel(self):
         try:
-            model = load_model("assets/pokedex.h5")
-
-            return model
+            return load_model("imageClassification/assets/pokedex.h5")
 
         except Exception as e:
             raise e
 
-
     def loadDictFromJson(self):
         try:
-            with open("assets/pokemonList.json") as jsonFile:
+            with open("imageClassification/assets/pokemonList.json") as jsonFile:
                 names = json.load(jsonFile)
             jsonFile.close()
 
-            self.pokemonDict = dict(names)
+            return dict(names)
 
         except Exception as e:
             raise e
 
     def predictImg(self, image, model):
         try:
+            pokemonDictNames = self.dictJson
             npImage = np.array(image).reshape(-1, self.imgSize, self.imgSize, 1)
             pokemonClass = str(model.predict_classes(npImage)[0])
-            pokemonDictNames = self.pokemonDict
-
             self.pokemonName = pokemonDictNames[pokemonClass]
 
         except Exception as e:
