@@ -1,0 +1,6 @@
+CNNTraining/dataset/
+CNNTraining/dataset1/
+CNNTraining/chromedriver
+**/.DS_Store
+__pycache__/**
+.idea/
