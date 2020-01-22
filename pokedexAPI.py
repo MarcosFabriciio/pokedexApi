@@ -13,6 +13,9 @@ class Classification(Resource):
         self.classifier = ImageClassifier()
 
     def get(self):
+        pass
+
+    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('base64string', location='json')
         args = parser.parse_args()
@@ -24,15 +27,14 @@ class Classification(Resource):
             apiPath = "https://pokeapi.co/api/v2/pokemon/"
             response = requests.get(apiPath + pokemonName.lower())
 
+            print(response)
+
             if response.status_code == 200:
                 return response.json(), 200
             else:
-                return "Não foi possivel coletar dados do pokemon, por favor tente novamente", 500
+                return "Couldn't get the Pokémon data please try again", 500
         else:
-            return "Não foi possivel classificar, verifique a imagem", 500
-
-    def post(self):
-        pass
+            return "Couldn't classify the Pokémon image", 500
     
     def put(self):
         pass
@@ -43,4 +45,4 @@ class Classification(Resource):
 
 api.add_resource(Classification, "/pokedex/classification")
 if __name__ == "__main__":
-    app.run(threaded=False)
+    app.run(host='192.168.1.108', threaded=False)
