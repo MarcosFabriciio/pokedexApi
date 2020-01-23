@@ -1,4 +1,4 @@
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 from tensorflow import cast
 from tensorflow import float32
 from io import BytesIO
@@ -61,7 +61,7 @@ class ImageClassifier:
     def predictImg(self, image, model):
         try:
             pokemonDictNames = self.dictJson
-            npImage = cast(np.array(image).reshape(-1, IMG_SIZE_X, IMG_SIZE_Y, 1), float32)
+            npImage = cast(np.array(image).reshape(-1, self.imgSize, self.imgSize, 1), float32)
             pokemonClass = str(model.predict_classes(npImage)[0])
             self.pokemonName = pokemonDictNames[pokemonClass]
 
