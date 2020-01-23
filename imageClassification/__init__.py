@@ -13,7 +13,7 @@ class ImageClassifier:
     def __init__(self):
 
         self.base64String = None
-        self.imgSize = 300
+        self.imgSize = 96
         self.pokemonName = None
         self.dictJson = None
         self.model = None
